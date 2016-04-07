@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>HTML Notes and Note References</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<script src='https://www.w3.org/Tools/respec/respec-w3c-common' async="async" class='remove'></script>
+<script class="remove"><!--
+var respecConfig = {
+    // specification status (e.g., WD, LCWD, NOTE, etc.). If in doubt use ED.
+    specStatus:           "unofficial",
+    processVersion:       "2005",
+
+    // the specification's short name, as in http://www.w3.org/TR/short-name/
+    shortName:            "html-note",
+
+    // if your specification has a subtitle that goes below the main
+    // formal title, define it here
+    // subtitle   :  "an excellent document",
+
+    // if you wish the publication date to be other than today, set this
+    // publishDate:  "2015-11-30",
+
+    // if the specification's copyright date is a range of years, specify
+    // the start date here:
+    copyrightStart: "2016",
+
+    // if there is a previously published draft, uncomment this and set its YYYY-MM-DD date
+    // and its maturity status
+    // previousPublishDate:  "2014-08-14",
+    // previousMaturity:  "WD",
+    // previousDiffURI:        "http://www.w3.org/TR/2014/WD-media-accessibility-reqs-20140814/",
+
+    // if there a publicly available Editor's Draft, this is the link
+    edDraftURI: "https://spec-ops.github.io/html-note/",
+
+    // if this is a LCWD, uncomment and set the end of its review period
+    // lcEnd: "2009-08-05",
+
+    // editors, add as many as you like
+    // only "name" is required
+    editors:  [
+                  { name: "Shane McCarron", url: 'http://blog.halindrome.com',
+                  company: "Shane is Shane Company", companyURL:
+                  "http://www.halindrome.com" },
+                  { name: "David MacDonald", url: 'http://www.davidmacd.com/',
+                  company: "CanAdapt Solutions Inc.", companyURL:
+                  'http://www.davidmacd.com/' }
+    ],
+
+    // authors, add as many as you like.
+    // This is optional, uncomment if you have authors as well as editors.
+    // only "name" is required. Same format as editors.
+
+    authors:  [
+    ],
+
+    // name of the WG
+    wg:           "Accessible Platform Architectures Working Group",
+
+    // URI of the public WG page
+    wgURI:        "http://www.w3.org/WAI/APA/",
+
+    // name (with the @w3c.org) of the public mailing to which comments are due
+    wgPublicList: "public-APA-comments",
+
+    // URI of the patent status for this WG, for Rec-track documents
+    // !!!! IMPORTANT !!!!
+    // This is important for Rec-track documents, do not copy a patent URI from a random
+    // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
+    // Team Contact.
+    wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/32212/status",
+
+    // Depth for the TOC
+    maxTocLevel: 2,
+
+    // include introduction sections in the ToC
+    tocIntroductory: true,
+    doRDFa: 1.1
+};
+      function _esc(s) {
+          s = s.replace(/&/g,'&amp;');
+          s = s.replace(/>/g,'&gt;');
+          s = s.replace(/"/g,'&quot;');
+          s = s.replace(/</g,'&lt;');
+          return s;
+      }
+
+
+      function updateExample(doc, content) {
+        // perform transformations to make it render and prettier
+        content = content.replace(/<!--/, '');
+        content = content.replace(/-->/, '');
+        content = _esc(content);
+        content = content.replace(/\*\*\*\*([^*]*)\*\*\*\*/g, '<span class="hilite">$1</span>') ;
+        return content ;
+      }
+--></script>
+<style>
+table { border-collapse: collapse; border-style: hidden hidden none hidden; }
+table thead, table tbody { border-bottom: solid; }
+table tbody th:first-child { border-left: solid; }
+table tbody th { text-align: left; }
+table td, table th { border-left: solid; border-right: solid; border-bottom: solid
+    thin; vertical-align: top; padding: 0.2em; }
+.element dt { margin-top: 0.5em; margin-bottom: 0.5em;  }
+h3 { position: relative; z-index: 3; }
+h3 + .element, h3 + div + .element { margin-top: -2.5em; padding-top: 2em; }
+.element {
+    background: #F4F4FA;
+    color: black;
+    margin: 0 0 1em 0.15em;
+    padding: 0 1em 0.25em 0.75em;
+    border-left: solid #9999FF 0.25em;
+    position: relative;
+    z-index: 1;
+}
+.element:before {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: -1.15em;
+    height: 2em;
+    width: 0.9em;
+    background: #F4F4FA;
+    content: ' ';
+    border-style: none none solid solid;
+    border-color: #9999FF;
+    border-width: 0.25em;
+}
+</style>
+</head>
+<body>
+<section id="abstract">
+    <p>Various communities have, over the years, lamented the lack of classic 'footnote' capabilities
+    in HTML.  This specification defines elements that can be used to markup notes and references
+    thereto.  It further specifies default styling for these elements, and suggests alternate ways
+    that they might be organized and presented for specific uses.</p>
+</section>
+<section id="sotd">
+    <p>This specification is designed to be an extension to [[!HTML5]].
+    This is a very early draft to collect together use cases, prioritize them, and start to mock up
+    a solution that can address them.</p>
+</section>
+<section class="informative" id="intro">
+    <h2>Introduction</h2>
+    <p>Since the earliest versions of HTML, it has been possible to define a connection between
+    areas of documents.  Unfortunately, this simple and ubiquitous mechanism is not completely able to
+    represent the rich semantics inherent in all sorts of connections that appear within and among
+    documents.  </p>
+</section>
+<section class="informative" id="terms">
+    <h2>Terms</h2>
+    <p>This section defines terms that are use throughout this specification.</p>
+    <dl>
+        <dt><dfn>Accessible Name</dfn></dt>
+        <dd>
+        <p>The accessible name is the name of a user interface element. Each platform accessibility <abbr title="application programming interface">API</abbr> provides
+        the accessible name property. The value of the accessible name may be
+        derived from a visible (e.g., the visible text on a button) or invisible
+        (e.g., the text alternative that describes an icon) property of the user
+        interface element.</p>
+        <p>A simple use for the accessible name property may be illustrated by
+        an &quot;OK&quot; button. The text &quot;OK&quot; is the accessible name.
+        When the button receives focus, assistive technologies may concatenate
+        the platform's role description with the accessible name. For example,
+        a screen reader may speak &quot;push-button OK&quot; or &quot;OK button&quot;.
+        The order of concatenation and specifics of the role description (e.g., &quot;button&quot;, &quot;push-button&quot;, &quot;clickable
+        button&quot;) are determined by platform accessibility APIs or assistive
+        technologies.</p>
+        </dd>
+        <dt><dfn>Assistive Technologies</dfn></dt>
+        <dd><p>Hardware and/or software that:</p>
+        <ul>
+            <li>relies on services provided by a user agent to retrieve and render Web content </li>
+            <li>works with a user agent or web content itself through the use of APIs, and</li>
+            <li>provides services beyond those offered by the user agent to facilitate user interaction with web content by people with disabilities</li>
+        </ul>
+        <p>This definition may differ from that used in other documents.</p>
+        <p>Examples of assistive technologies that are important in the context
+        of this document include the following:</p>
+        <ul>
+            <li>screen magnifiers, which are used to enlarge and improve the visual
+            readability of rendered text and images;</li>
+            <li>screen readers, which are most-often used to convey information through
+            synthesized speech or a refreshable Braille display;</li>
+            <li>text-to-speech software, which is used to convert text into synthetic
+            speech;</li>
+            <li>speech recognition software, which is used to allow spoken control
+            and dictation;</li>
+            <li>alternate input technologies (including head pointers, on-screen
+            keyboards, single switches, and sip/puff devices), which are used to
+            simulate the keyboard;</li>
+            <li>alternate pointing devices, which are used to simulate mouse pointing
+            and clicking.</li>
+        </ul>
+        </dd>
+        <dt><dfn data-lt="display values">Display Value</dfn></dt>
+        <dd>The <a>display value</a> for a <a>note</a> is the ordinal value
+        (manually or automatically) assigned to the note, transformed into a
+        display style as defined by the <a>note's</a> associated type.</dd>
+        <dt><dfn data-lt="notes|note's">Note</dfn></dt>
+        <dd>For the purposes of <em>this</em> specification, a <a>note</a> is ancillary or supporting
+        content that is referenced 0 or more times in the document.</dd>
+        <dt><dfn data-lt="note group|note groups|note group's|group|groups|group's">Note Group</dfn></dt>
+        <dd>A <a>note group</a> is a collection of notes that are related to one
+        another in some way.  <a>Notes</a> in a <a>note group</a> have <a>display
+            values</a> that are unique with the <a>note group</a>.</dd>
+        <dt><dfn data-lt="note references|references|reference">Note Reference</dfn></dt>
+        <dd>For purposes of <em>this</em> specification, a <a>note reference</a> is an explicit connection
+        from a location in the document to a <a>note</a>.</dd>
+    </dl>
+</section>
+<section class="informative" id="UCnR">
+    <h2>Use Cases and Requirements</h2>
+    <section>
+        <h3>Use Cases</h3>
+        <ol>
+            <li id='UC-1'>
+            Dave is writing a scientific article for a journal.  The article will be published both
+            on-line and in print.  The article has many supporting references and ancillary data that are
+            gathered at its end.  Those references and data are referred to from within the article.
+            Dave needs a consistent way to define these "notes" and refer to them that is easy to use,
+            accessible, and will work well on-line and in print.  
+            </li>
+            <li id='UC-2'>
+            Matthew is editing his thesis on the history of the kilt into a 
+            large-format sumptuously illustrated book for a more general audience. He
+            uses end-notes for references that he cites and keeps small anecdotes,
+            glossary explanations and occasional dates in footnotes, so that
+            readers can easily see at a glance whether a footnote might be
+            interesting to them.
+            </li>
+            <li id="UC-3">
+            Susan has been helping an Iranian scholar edit an English translation
+            of some poems from modern Persian; simple glosses (word explanations)
+            appear in the right margin. Where possible the glosses are aligned with
+            the text they explain; if necessary they are shifted up or down to make
+            room. Footnotes point to longer explanations that contextualize the
+            work. Both footnotes and glosses include mixtures of text direction,
+            language and script. The original English translation had footnotes of
+            its own, and these are numbered separately on each page and are printed
+            immediately below the main text, above any new footnotes. The Persian
+            also has occasional footnotes which again are numbered separately and
+            printed (in English) at the foot of the page below the new footnotes. A
+            line separates the three sets of footnotes.
+            </li>
+            <li id="UC-4">
+            Annette is writing Calculus Basics and wants to offer her lecture notes to
+            other instructors. She uses Web Annotations [[ANNOTATION-MODEL]] to add tips for instructors in
+            the margins to create an instructors’ Edition, available in print or
+            electronic format.
+            </li>
+            <li id="UC-5">
+            Pria is writing a journal article with multiple bibliographic reference
+            using the <a href="http://www.apastyle.org/">APA style guide</a>, meaning multiple references point to the
+            same note. It must be possible for her readers to examine the note and
+            return to the point from which it was referenced.
+            (Note: this has implications for [[WCAG20]] compliance, requiring title on the link).
+            </li>
+        </ol>
+    </section>
+    <section>
+        <h3>Requirements</h3>
+        <p>The following requirements were gathered via several email exchanges in 2015.</p>
+        <ul>
+            <li>There must be a way to declaratively define a <a>note</a> and one or more references to a <a>note</a>.</li>
+            <li>There must be a way to easily navigate to and from a <a>note</a>, or to examine the
+            content of the <a>note</a> from the context of a <a>reference</a> to that <a>note</a>.</li>
+            <li>There must be a way to determine / navigate among all references to a <a>note</a>.</li>
+            <li>It must be possible to fully style <a>notes</a> such that, for example, they could manifest differently on different sorts of devices, appear as side notes, appear as floating "tooltips", be organized into "endnotes", or whatever other innovative presentation mechanism the author might come up with.</li>
+            <li>It must be possible to support a mixture of end-notes, footnotes, inline notes, and marginalia</li>
+            <li>It must be possible to reference a single note multiple times; navigation back from a note must return to the correct starting-point even where a note had multiple reference pointing to it.</li>
+            <li>It should be possible to navigate among all <a>notes</a> / <a>notes</a> with specific @role or @rel values.</li>
+            <li>The scope of a note (beginning and end) must be well-defined, so that it is possible to extract all <a>notes</a> or process them separately in any order.</li>
+            <li>It must be possible to embed a <a>note</a> within a <a>note</a>. @@@ What does this mean in terms of knowing where a note starts and ends?</li>
+            <li>It must be possible to include markup (including for example MathML, SVG, HTML tables...) in a <a>note</a></li>
+            <li>It must be possible to enhance the semantics associated with a <a>note</a> through
+            well-defined values for @role or other attributes that inform semantics.</li>
+            <li>It must be possible to have <a>note</a> identifiers be automatically generated.</li>
+            <li>It must be possible to override the automatic generation of <a>note</a> identifiers</li>
+            <li>It should be possible to define multiple sequences of notes / <a>note</a> identifiers</li>
+            <li>It must be possible to carefully control the position of notes - from Bill Kasdorf</li>
+            <li>It must be possible for end-users to override the publisher's positioning requirements - from Bill Kasdorf</li>
+            <li>It must be possible to mark a section of text as the link to the <a>note</a> (anchor), rather than just a marker at a single point - from http://lists.w3.org/Archives/Public/public-digipub-ig/2015Feb/0094.html Robert Sanderson]</li>
+            <li>It must be possible to have a <a>note</a> refer to multiple sections of the text, rather
+            than only one @@@ This seems odd - notes don't refer to the text.  Text refers to notes. @@@</li>
+            <li>It should be possible to have alternative representations of the <a>note</a> based upon arbitrary criteria (e.g., age, developmental level, interest level)</li>
+            <li>It should be possible to reference a <a>note</a> so that it can be further commented upon</li>
+            <li>It must be possible to create <a>notes</a> that reference non-text items such as the
+            bounding box of image-based media @@@ again - notes don't reference text @@@</li>
+            <li>It must be possible to define a <a>note</a> with non-text (e.g., image, audio, video)</li>
+            <li>It must be possible to style the reference to a <a>note</a></li>
+            <li>It must be possible to extract semantic information about the provenance of a <a>note</a>
+            (e.g., creator, date created, etc) when that information is available @@@ this supposes some
+            external annotation techniques, and may be outside the scope of this specification; however,
+            it should not be precluded @@@</li>
+            <li>It must be possible for an author or enduser to control the presentation of the <a>note</a> through scripting and/or other preference settings.</li>
+        </ul>
+    </section>
+</section>
+<section id="elements">
+    <h2>Elements</h2>
+    <p class="issue">
+    Instead of relying up @role to control the semantics of the notes, we *could*
+    introduce an enumerated list of @kind values (ala the HTML5 track element)
+    and define explicit semantics for the <em>kinds</em> of notes we support.
+    Optionally permit other values for @kind, but say that their semantics are
+    undefined.  Candidate values for @kind would be footnote, sectionnote,
+    endnote.  If we wanted it to be really fun and declarative, also define the
+    region where the notes would be gathered / relocated via @region (IDREF).</p>
+    <section id="E-notegroup">
+        <h2>The <code>notegroup</code> element</h2>
+        <dl class="element">
+            <dt>Categories:</dt>
+            <dd>Flow</dd>
+            <dd>Sectioning</dd>
+            <dt>Contexts in which this element can be used:</dt>
+            <dd>Where flow content is expected.</dd>
+            <dt>Content model:</dt>
+            <dd>Flow content.</dd>
+            <dt>Content attributes:</dt>
+            <dd>Global attributes</dd>
+            <dd><code>group</code> &mdash; Default group name to use for <a>notes</a></dd>
+            <dd><code>type</code> &mdash; Default type of note marker to use for <a>notes</a></dd>
+            <dt>Tag omission in text/html:</dt>
+            <dd>Neither tag is omissible.</dd>
+            <dt>Allowed ARIA role attribute values:</dt>
+            <dd><code>region</code> (default - <em>do not set</em>),
+            <code>doc-footnotes</code> [[!DPUB-ARIA-1.0]]</dd>
+            <dt>Allowed ARIA State and Property Attributes:</dt>
+            <dd>Global aria-* attibutes</dd>
+            <dd>Any aria-* attributes applicable to the allowed roles.</dd>
+            <dt>DOM interface:</dt>
+            <dd>
+            <pre class="idl">
+interface HTMLNotegroupElement : HTMLElement {
+  attribute DOMString group;
+  attribute DOMString type;
+};
+
+interface GroupInfo {
+  readonly attribute DOMString group;
+  readonly attribute DOMString type;
+  readonly attribute long nextValue;
+};
+
+interface HTMLNotegroupCollection {
+  readonly attribute long length;
+  getter GroupInfo (unsigned long index);
+  getter GroupInfo (DOMString group);
+};
+
+partial interface Document {
+  [SameObject] readonly attribute HTMLNotegroupCollection notes;
+};
+            </pre>
+            </dd>
+        </dl>
+
+        <p>The <code>notegroup</code> element represents a section of a document
+        or application that encloses <a>note</a> and other related content.
+        Typically the content of a <code>notegroup</code> is one or more <a
+            href="#E-note">note</a> elements.</p>
+
+        <p>If a <code>group</code> attribute value is supplied, it represents
+        the name of this collection of notes.  It's value can effect the <a>note
+            group</a> of any
+        enclosed <code>note</code> elements.</p>
+
+        <p>If a <code>type</code> attribute is supplied,
+        it can effect the <a data-for="HTMLNoteElement">type</a> of any enclosed <code>note</code>
+        elements.</p>
+
+        <p>The <a data-for="HTMLNotegroupElement">group</a> IDL attribute
+        MUST reflect the value of the <code>group</code> attribute.</p>
+        
+        <p>The <a data-for="HTMLNotegroupElement">type</a> IDL attribute
+        MUST reflect the value of the <code>type</code> attribute.</p>
+
+        <p>This specification extends the <a data-for="Document">document</a>
+        object with the 
+        <a data-for="HTMLNotegroupCollection">HTMLNotegroupCollection</a> 
+        <a data-for="HTMLNotegroupCollection">notes</a>.  This is a list of all of
+        the <a>note groups</a> defined in the document along with their associated
+        state information.</p>
+
+        <p class="issue">A note is a self-contained node.  When such a note is
+        referenced via a <a href="#E-noteref">noteref</a> element, and that
+        reference is activated via someone using assistive technology, should the
+        AT only "display" the contents if the referenced note?  Even if the note
+        is part of a large collection of notes?  Or should the AT start
+        "displaying" at the node for the node, and continue until it runs out of
+        content or the user stops the displaying and returns to the reference via
+        the "back" action?</p>
+
+        <section id="notegroup-processing-model">
+            <h3>Processing model</h3>
+            <p>User agents MUST process the <code>notegroup</code> element as follows:</p>
+            <ol>
+                <li>Determine the value for <em>group</em>:
+                <ol type='a'>
+                    <li>If the element's <code>group</code> attribute is present, let <em>group</em> equal
+                    its value.</li>
+                    <li>Otherwise, if the element is a child of a <code>notegroup</code> element, and that
+                    element's <code>group</code> attribute is present, let <em>group</em> equal its
+                    value.</li>
+                    <li>Otherwise, let <em>group</em> equal the empty string.</li>
+                </ol>
+                </li>
+                <li>If the <a data-for='Document'>notes</a>
+                entry associated with <em>group</em> does not exist, create one and set 
+                its <a data-for="GroupInfo">group</a> attribute to <em>group</em>.</li>
+                <li>Let <em>GroupInfo</em> equal the 
+                <a data-for='Document'>notes</a> entry associated with <em>group</em>.</li>
+                <li>Determine the value for <em>type</em>:
+                <ol type='a'>
+                    <li>If the element's <code>type</code> attribute is present, let <em>type</em> equal
+                    its value.</li>
+                    <li>Otherwise, if <em>GroupInfo</em> has a value for its
+                    <a data-for="GroupInfo">type</a> attribute,
+                    let <em>type</em> equal that value.</li>
+                    <li>Otherwise, if the element is a child of a <code>notegroup</code> element, and that
+                    element's <code>type</code> attribute is present, let <em>type</em> equal its
+                    value.</li>
+                    <li>Otherwise, let <em>type</em> equal '1'.</li>
+                </ol>
+                </li>
+                <li>If the <a data-for="GroupInfo">nextValue</a> attribute
+                of <em>GroupInfo</em> is NOT set, set it to 1.</li>
+                <li>If the <a data-for="GroupInfo">type</a> attribute of
+                <em>GroupInfo</em> is NOT set, it to <em>type</em>.</li>
+            </ol>
+        </section>
+    </section>
+    <section id="E-note">
+        <h2>The <code>note</code> element</h2>
+        <dl class="element">
+            <dt>Categories:</dt>
+            <dd>Flow</dd>
+            <dt>Contexts in which this element can be used:</dt>
+            <dd></dd>
+            <dt>Content model:</dt>
+            <dd>Flow</dd>
+            <dt>Tag omission in text/html:</dt>
+            <dd>Neither tag is omissible.</dd>
+            <dt>Content attributes:</dt>
+            <dd>Global attributes</dd>
+            <dd><code>group</code> &mdash; Name of the note group</dd>
+            <dd><code>value</code> &mdash; Ordinal value of the note</dd>
+            <dd><code>type</code> &mdash; The type of the note marker</dd>
+            <dt>Allowed ARIA role attribute values:</dt>
+            <dd><code>note</code> (default - <em>do not set</em>), 
+            <code>doc-footnote</code> [[!DPUB-ARIA-1.0]]</dd>
+            <dt>Allowed ARIA State and Property Attributes:</dt>
+            <dd>Global aria-* attibutes</dd>
+            <dd>Any aria-* attributes applicable to the allowed roles.</dd>
+            <dt>DOM interface:</dt>
+            <dd>
+            <pre class="idl">
+interface HTMLNoteElement : HTMLElement {
+  attribute DOMString group;
+  attribute DOMString type;
+  attribute long value;
+  readonly attribute DOMString displayValue;
+  readonly attribute NodeList references;
+};
+            </pre>
+            </dd>
+        </dl>
+        <p>The <code>note</code> element represents content that is related to other content in the
+        document. Typically the content of a <code>note</code> is a reference or other supporting
+        information that would be distracting to the reader if it were included in the normal flow of
+        the content that references it.</p>
+        <p>The <code>group</code> content attribute, if present, represents the name of a
+        <a>note group</a>. 
+        If no <code>group</code> is specified, then the default
+        group is used.</p>
+        <p>The <code>type</code>
+        attribute
+        can be used to specify the kind of marker to use on the
+        note.
+        The attribute, if specified, must have a value that is a
+        case-sensitive match
+        for one of the characters given in the first cell of one of the rows of
+        the table in <a href="#note-types">Appendix A</a>. The <code>type</code> attribute
+        represents the state given in the cell in the
+        second column of the row whose first cell matches the attribute’s
+        value; if none of the cells
+        match, or if the attribute is omitted, then the attribute
+        represents the decimal state.</p>
+        <p>The <code>value</code> content attribute, if present, must be an
+        integer giving the ordinal value of the note.
+        If no <code>value</code> is supplied, the next available value within the
+        note's <a>group</a> is used.</p>
+        <p>The <a data-for="htmlnotelement">group</a> IDL attribute MUST reflect the content attribute of the same name.</p>
+        <p>The <a data-for="HTMLNoteElement">type</a> IDL attribute MUST reflect
+        the content attribute of the same name, limited to only known values from
+        the table in <a href="#note-types">Appendix A</a>.</p>
+        <p>The <a data-for="HTMLNoteElement">value</a> IDL attribute MUST reflect the ordinal value for the note (see <a
+            href="#note-processing-model">Processing model</a> below for details about determining
+        value).</p>
+        <p>The <a data-for="HTMLNoteElement">displayValue</a> IDL attribute MUST
+        reflect the <a data-for="HTMLNoteElement">value</a> IDL attribute when
+        transformed according to the element's <a data-for="HTMLNoteElement">type</a> IDL
+        attribute as defined in <a href="#note-types">Appendix A</a>.</p>
+        <p>The <a data-for="HTMLNOteElement">references</a> IDL attribute MUST
+        reflect the list of <code>noteref</code> elements that reference the
+        note.</p>
+        <p>By default, the contents of this element are displayed prefixed by the
+        note's <a>display value</a>.</p>
+        <section id="note-processing-model">
+            <h3>Processing model</h3>
+
+            <p>User agents MUST process the <code>note</code> element as follows:</p>
+
+            <p class='issue'>This model requires that the ID of each note be document unique.  In
+            theory it is possible to only require that the ID be unique within the collection of notes
+            in the same group within the document.  This would require implementations to perform
+            navigation using something other than fragment identifiers, however.  Is this
+            desirable?</p>
+
+            <p class="issue">The style of value processing defined here permits duplicate values
+            within a group of notes.  Should duplicate note values be prevented?</p>
+            <ol>
+
+                <li>If the element's <code>id</code> attribute is present and is not unique in the
+                document, or if the element's <code>id</code> attribute is NOT present, abort processing.  This
+                is not a valid <a>note</a> as it cannot be referenced.</li>
+
+                <li>Otherwise, determine the value for <em>group</em>:
+
+                <ol type='a'>
+
+                    <li>If the element's <code>group</code> attribute is present, let <em>group</em> equal
+                    its value.</li>
+
+                    <li>Otherwise, if the element is a child of a <code>notegroup</code> element, and that
+                    element's <code>group</code> attribute is present, let <em>group</em> equal its
+                    value.</li>
+
+                    <li>Otherwise, let <em>group</em> equal the empty string.</li>
+                </ol>
+                </li>
+
+                <li>If the <a data-for='Document'>notes</a>
+                entry associated with <em>group</em> does not exist, create one and set 
+                its <a data-for="GroupInfo">group</a> attribute to <em>group</em>.</li>
+
+                <li>Let <em>GroupInfo</em> equal the 
+                <a data-for='Document'>notes</a> entry associated with <em>group</em>.</li>
+
+                <li>Determine the value for <em>type</em>:
+
+                <ol type='a'>
+
+                    <li>If the element's <code>type</code> attribute is present, let <em>type</em> equal
+                    its value.</li>
+
+                    <li>Otherwise, if <em>GroupInfo</em> has a value for its
+                    <a data-for="GroupInfo">type</a> attribute,
+                    let <em>type</em> equal that value.</li>
+
+                    <li>Otherwise, if the element is a child of a <code>notegroup</code> element, and that
+                    element's <code>type</code> attribute is present, let <em>type</em> equal its
+                    value.</li>
+
+                    <li>Otherwise, let <em>type</em> equal '1'.</li>
+                </ol>
+                </li>
+
+                <li>Determine the value for <em>value</em>:
+                <ol type='a'>
+
+                    <li>If the element's <code>value</code> attribute is present, let <em>value</em> equal
+                    its value.</li>
+
+                    <li>Otherwise, if <em>GroupInfo</em> has a value for its 
+                    <a data-for='GroupInfo'>nextValue</a> attribute, let <em>value</em> equal its
+                    value.</li>
+
+                    <li>Otherwise, let <em>value</em> equal '1'.</li>
+                </ol>
+                </li>
+
+                <li>Set the <a data-for="GroupInfo">nextValue</a> attribute
+                of <em>GroupInfo</em> to <em>value</em> plus 1.</li>
+
+                <li>If the <a data-for="GroupInfo">type</a> attribute of <em>GroupInfo</em> is NOT
+                set, set it to <em>type</em>.</li>
+
+                <li>Set the element's <a data-for="HTMLNoteElement">displayValue</a> attribute to the
+                appropriate display value by correlating <em>type</em> with <em>value</em> as defined
+                in the <a href="#note-types">Appendix A</a>.</li>
+            </ol>
+        </section>
+    </section>
+    <section id="E-noteref">
+        <h2>The <code>noteref</code> element</h2>
+        <dl class="element">
+            <dt>Categories:</dt>
+            <dd>Phrasing</dd>
+            <dt>Contexts in which this element can be used:</dt>
+            <dd>Where phrasing content is expected.</dd>
+            <dt>Content model:</dt>
+            <dd>Transparent, but there MUST be no interactive content or <code>noteref</code> or
+            <code>a</code> element descendants.</dd>
+            <dt>Tag omission in text/html:</dt>
+            <dd>Neither tag is omissible.</dd>
+            <dt>Content attributes:</dt>
+            <dd>Global attributes</dd>
+            <dd><code>note</code> &mdash; the ID of a note to reference</dd>
+            <dt>Allowed ARIA role attribute values:</dt>
+            <dd><code>link</code> (default - <em>do not set</em>), 
+            <code>doc-noteref</code> [[!DPUB-ARIA-1.0]]</dd>
+            <dt>Allowed ARIA State and Property Attributes:</dt>
+            <dd>Global aria-* attibutes</dd>
+            <dd>aria-linktype</dd>
+            <dt>DOM interface:</dt>
+            <dd>
+            <pre class="idl">
+interface HTMLNoterefElement : HTMLElement {
+  readonly attribute DOMString displayValue;
+  readonly attribute DOMString note;
+};
+            </pre>
+            </dd>
+        </dl>
+        <div class="issue">
+            <p>
+            The content model for <code>noteref</code> is similar to that of <code>a</code>.  This makes
+            sense and is maximally flexible.  However, in the most common use case, <code>noteref</code>
+            will be used with no content at all:</p>
+            <pre class="example highlight" data-transform="updateExample"><!--
+<p>This is a sentence that references a footnote<noteref note='fn1'></noteref>.</p>
+            -->
+            </pre>
+            <p>Requiring the opening and closing tags in this common use case is
+            inconvenient. Unfortunately, HTML does not have a simple way to short
+            circuit a tag like XML does.  And permitting the omission of the
+            end tag in this case would result in inconsistent and undesirable
+            parsing.</p>
+        </div>
+        <p>The <code>noteref</code> element represents a reference to a note
+        within the same document.  When this element is visible, its content is displayed prefixed
+        with the 
+        <a>display value</a> of the associated <a>note</a>.</p>
+
+        <p>The note's <a>display value</a> and any content of the
+        <code>noteref</code> element are focusable and selectable.  By default,
+        selecting and activating the
+        content changes focus to the <a>note</a> referenced, in
+        <strong>exactly</strong> the same manner as navigation from an
+        <code>a</code> element to its target. This has the logical follow-on
+        effect that the user agent's "back" functionality will return focus to
+        the location of the original reference.</p>
+        <p class="note">It is possible to override the default behavior through
+        scripting.  For example, changing focus to the <a>note</a> could cause
+        the referenced note's content to be displayed in a pop-up window, in a
+        magin, in an area at the bottom of the screen, or whatever other
+        mechanism is appropriate for the style of <a>note</a> and the idiom of
+        the document. When such features are implemented, they SHOULD always keep
+        in mind the needs of users with various accessibility requirements.  For
+        example, having the content of a note appear in a pop-up window when the
+        reference acquires focus is fine for sighted users, but a user relying up
+        a screen reader may wish to activate the reference in order to change
+        focus to that popup so their reader will convey the contents of the
+        note.</p>
+        <p>The <code>note</code> content attribute represents the <code>id</code> of the <code>note</code> element
+        being referenced.  A <code>note</code> element with that ID MUST be present in the document in
+        order for the <code>noteref</code> element to be considered a reference to a note (see <a
+            href="#noteref-processing-model">Processing Model</a> below).</p>
+        <p class="note">A <a>note reference</a> SHOULD have an <a>accessible name</a> so that <a>assistive
+            technologies</a> can make the semantics of the reference clear to their users.</p>
+        <section id="noteref-processing-model">
+            <h3>Processing model</h3>
+            <p>If the <code>noteref</code> element has a <code>note</code> attribute specified, user
+            agents MUST process it as follows:</p>
+            <ol>
+                <li>Parse the attribute's value using the rules for parsing a hash-name reference to a
+                <code>note</code> element, with the element's node document as the context node.  This
+                will return either an element (<em>the note</em>) or null.</li>
+                <li>If that returned null, then abort these steps.</li>
+                <li>Otherwise, perform the following steps:
+                <ol type='a'>
+                    <li>Set the element's IDL attribute 
+                    <a data-for="htmlnoterefelement">displayValue</a> 
+                    to <em>the note</em>'s IDL
+                    attribute <a data-for="htmlnoteelement">displayValue</a></li>
+                    <li>Add the element's DOM node to <em>the note</em>'s IDL attribute 
+                    <code>references</code>.</li>
+                </ol>
+                </li>
+            </ol>
+        </section>
+    </section>
+</section>
+<section id="note-types" class="appendix">
+    <h2>Note types</h2>
+    <table class="type-table">
+        <thead>
+            <tr>
+                <th colspan="11">
+                    Note Types Table
+                </th>
+            </tr>
+            <tr>
+                <th>Keyword
+                </th><th>State
+                </th><th>Description
+                </th><th
+                    colspan="8">Examples
+                    for
+                    values
+                    1-3
+                    and
+                    3999-4001
+        </th></tr></thead><tbody>
+        <tr>
+            <td><dfn
+                    data-dfn-for="note/type"
+                    data-dfn-type="attr-value"
+                    data-export=""
+                    id="attr-valuedef-ol-type-1"><code>1</code><a
+                        class="self-link"
+                        href="semantics.html#attr-valuedef-ol-type-1"></a></dfn>
+                (U+0031)
+            </td><td><dfn
+                    data-dfn-for="note"
+                    data-dfn-type="state"
+                    data-export=""
+                    id="statedef-ol-decimal">decimal<a
+                        class="self-link"
+                        href="semantics.html#statedef-ol-decimal"></a></dfn>
+            </td><td>Decimal
+                numbers
+            </td><td
+                class="eg"><samp>1.</samp>
+            </td><td
+                class="eg"><samp>2.</samp>
+            </td><td
+                class="eg"><samp>3.</samp>
+            </td><td
+                class="eg">... 
+            </td><td
+                class="eg"><samp>3999.</samp>
+            </td><td
+                class="eg"><samp>4000.</samp>
+            </td><td
+                class="eg"><samp>4001.</samp>
+            </td><td
+                class="eg">...
+        </td></tr><tr>
+            <td><dfn
+                    data-dfn-for="note/type"
+                    data-dfn-type="attr-value"
+                    data-export=""
+                    id="attr-valuedef-ol-type-a"><code>a</code><a
+                        class="self-link"
+                        href="semantics.html#attr-valuedef-ol-type-a"></a></dfn>
+                (U+0061)
+            </td><td><dfn
+                    data-dfn-for="note"
+                    data-dfn-type="state"
+                    data-export=""
+                    id="statedef-ol-lower-alpha">lower-alpha<a
+                        class="self-link"
+                        href="semantics.html#statedef-ol-lower-alpha"></a></dfn>
+            </td><td>Lowercase
+                latin
+                alphabet
+            </td><td
+                class="eg"><samp>a.</samp>
+            </td><td
+                class="eg"><samp>b.</samp>
+            </td><td
+                class="eg"><samp>c.</samp>
+            </td><td
+                class="eg">... 
+            </td><td
+                class="eg"><samp>ewu.</samp>
+            </td><td
+                class="eg"><samp>ewv.</samp>
+            </td><td
+                class="eg"><samp>eww.</samp>
+            </td><td
+                class="eg">...
+        </td></tr><tr>
+            <td><code>A</code>
+                (U+0041)
+            </td><td><dfn
+                    data-dfn-for="note"
+                    data-dfn-type="state"
+                    data-export=""
+                    id="statedef-ol-upper-alpha">upper-alpha<a
+                        class="self-link"
+                        href="semantics.html#statedef-ol-upper-alpha"></a></dfn>
+            </td><td>Uppercase
+                latin
+                alphabet
+            </td><td
+                class="eg"><samp>A.</samp>
+            </td><td
+                class="eg"><samp>B.</samp>
+            </td><td
+                class="eg"><samp>C.</samp>
+            </td><td
+                class="eg">... 
+            </td><td
+                class="eg"><samp>EWU.</samp>
+            </td><td
+                class="eg"><samp>EWV.</samp>
+            </td><td
+                class="eg"><samp>EWW.</samp>
+            </td><td
+                class="eg">...
+        </td></tr><tr>
+            <td><dfn
+                    data-dfn-for="note/type"
+                    data-dfn-type="attr-value"
+                    data-export=""
+                    id="attr-valuedef-ol-type-i"><code>i</code><a
+                        class="self-link"
+                        href="semantics.html#attr-valuedef-ol-type-i"></a></dfn>
+                (U+0069)
+            </td><td><dfn
+                    data-dfn-for="note"
+                    data-dfn-type="state"
+                    data-export=""
+                    id="statedef-ol-lower-roman">lower-roman<a
+                        class="self-link"
+                        href="semantics.html#statedef-ol-lower-roman"></a></dfn>
+            </td><td>Lowercase
+                roman
+                numerals
+            </td><td
+                class="eg"><samp>i.</samp>
+            </td><td
+                class="eg"><samp>ii.</samp>
+            </td><td
+                class="eg"><samp>iii.</samp>
+            </td><td
+                class="eg">... 
+            </td><td
+                class="eg"><samp>mmmcmxcix.</samp>
+            </td><td
+                class="eg"><samp>i̅v̅.</samp>
+            </td><td
+                class="eg"><samp>i̅v̅i.</samp>
+            </td><td
+                class="eg">...
+        </td></tr><tr>
+            <td><code>I</code>
+                (U+0049)
+            </td><td><dfn
+                    data-dfn-for="note"
+                    data-dfn-type="state"
+                    data-export=""
+                    id="statedef-ol-upper-roman">upper-roman<a
+                        class="self-link"
+                        href="semantics.html#statedef-ol-upper-roman"></a></dfn>
+            </td><td>Uppercase
+                roman
+                numerals
+            </td><td
+                class="eg"><samp>I.</samp>
+            </td><td
+                class="eg"><samp>II.</samp>
+            </td><td
+                class="eg"><samp>III.</samp>
+            </td><td
+                class="eg">... 
+            </td><td
+                class="eg"><samp>MMMCMXCIX.</samp>
+            </td><td
+                class="eg"><samp>I̅V̅.</samp>
+            </td><td
+                class="eg"><samp>I̅V̅I.</samp>
+            </td><td
+                class="eg">...
+    </td></tr></tbody></table>
+</section>
+<section class='informative'>
+    <h2>Examples</h2>
+        <pre class="example highlight" data-transform="updateExample"><!--
+<!DOCTYPE html>
+<html lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Footnote Example 1</title>
+</head>
+<body>
+<h2>Here is a section</h2>
+<p>There is example content here.  Within the content there are references 
+to various notes.<noteref note="note-1"></noteref>  These references can be 
+basic or more ornate. 
+<noteref note="snote-1">Ornate reference</noteref> 
+<noteref note="snote-2">Second ornate reference</noteref>
+</p>
+<note type='i' id="note-1">This is note 1 - it was referenced first.</note>
+<notegroup type="A" group="secondary">
+  <note id="snote-1">This is a secondary note. It uses letters for identifiers.</note>
+  <note id="snote-2">This is another secondary note.  It also uses 
+  letters for identifiers.</note>
+</notegroup>
+<p>In another paragraph there is yet another reference.<noteref note="snote-3"></noteref> 
+That reference is to a note that is outside of a notegroup, but it will 
+inherit the settings of the group because they are already established.</p>
+
+<note id="snote-3" group="secondary">This is a third secondary note.</note>
+
+<p>This is a final paragraph to show how notes can be interleaved in 
+the source and still be simple footnote references.</p>
+</body>
+</html>
+-->
+        </pre>
+</section>
+<section class="informative">
+    <h2>Acknowledgements</h2>
+    <p>The following people and organizations were super helpful in their support
+    of developing this document:</p>
+    <ul>
+        <li><a href="mailto:liam@w3.org">Liam Quin, W3C</a></li>
+        <li><a href="mailto:tsiegman@wiley.com">Tzviya Siegman, Wiley</a></li>
+        <li><a href="https://www.w3.org/dpub/">The W3C Digital Publishing Activity</a></li>
+        <li><a href="http://www.w3.org/WAI/PF/html-task-force">The HTML
+            Accessibility Task Force</a></li>
+    </ul>
+</section>
+</body>
+</html>

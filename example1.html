@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Footnote Example 1</title>
+</head>
+<body>
+<h2>Here is a section</h2>
+<p>There is example content here.  Within the content there are references to various notes.<noteref
+note="ex1"></noteref>  These references can be basic or more ornate. 
+<noteref note="ex2">Ornate reference</noteref> 
+<noteref note="ex3">Second ornate reference</noteref>
+</p>
+<note type='i' id="ex1">This is note 1 - it was referenced first.</note>
+<notegroup type="A" group="secondary">
+<note id="ex2">This is a secondary note. It uses letters for identifiers.</note>
+<note id="ex3">This is another secondary note.  It also uses letters for identifiers.</note>
+</notegroup>
+<p>In another paragraph there is yet another reference.<noteref note="ex4"></noteref>  That reference
+is to a note that is outside of a notegroup, but it will inherit the settings of the group because
+they are already established.</p>
+<note id="ex4" group="secondary">This is a third secondary note.</note>
+<p>This is a final paragraph to show how notes can be interleaved in the source and still be simple
+footnote references.</p>
+</body>
+</html>
