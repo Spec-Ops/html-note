@@ -319,8 +319,10 @@ h3 + .element, h3 + div + .element { margin-top: -2.5em; padding-top: 2em; }
             <dd>Flow content.</dd>
             <dt>Content attributes:</dt>
             <dd>Global attributes</dd>
-            <dd><code>group</code> &mdash; Default group name to use for <a>notes</a></dd>
-            <dd><code>type</code> &mdash; Default type of note marker to use for <a>notes</a></dd>
+            <dd><code>group</code> &mdash; Default group name to use for <a>notes</a> contained in
+            the element</dd>
+            <dd><code>type</code> &mdash; Default type of note marker to use for <a>notes</a>
+            contained in the element</dd>
             <dt>Tag omission in text/html:</dt>
             <dd>Neither tag is omissible.</dd>
             <dt>Allowed ARIA role attribute values:</dt>
@@ -350,7 +352,7 @@ interface HTMLNotegroupCollection {
 };
 
 partial interface Document {
-  [SameObject] readonly attribute HTMLNotegroupCollection notes;
+  [SameObject] readonly attribute HTMLNotegroupCollection noteGroups;
 };
             </pre>
             </dd>
@@ -379,14 +381,14 @@ partial interface Document {
         <p>This specification extends the <a data-for="Document">document</a>
         object with the 
         <a data-for="HTMLNotegroupCollection">HTMLNotegroupCollection</a> 
-        <a data-for="HTMLNotegroupCollection">notes</a>.  This is a list of all of
+        <a data-for="document">noteGroups</a>.  This is a list of all of
         the <a>note groups</a> defined in the document along with their associated
         state information.</p>
 
         <p class="issue">A note is a self-contained node.  When such a note is
         referenced via a <a href="#E-noteref">noteref</a> element, and that
         reference is activated via someone using assistive technology, should the
-        AT only "display" the contents if the referenced note?  Even if the note
+        AT only "display" the contents of the referenced note?  Even if the note
         is part of a large collection of notes?  Or should the AT start
         "displaying" at the node for the node, and continue until it runs out of
         content or the user stops the displaying and returns to the reference via
@@ -406,11 +408,11 @@ partial interface Document {
                     <li>Otherwise, let <em>group</em> equal the empty string.</li>
                 </ol>
                 </li>
-                <li>If the <a data-for='Document'>notes</a>
+                <li>If the <a data-for='Document'>noteGroups</a>
                 entry associated with <em>group</em> does not exist, create one and set 
                 its <a data-for="GroupInfo">group</a> attribute to <em>group</em>.</li>
                 <li>Let <em>GroupInfo</em> equal the 
-                <a data-for='Document'>notes</a> entry associated with <em>group</em>.</li>
+                <a data-for='Document'>noteGroups</a> entry associated with <em>group</em>.</li>
                 <li>Determine the value for <em>type</em>:
                 <ol type='a'>
                     <li>If the element's <code>type</code> attribute is present, let <em>type</em> equal
@@ -437,7 +439,7 @@ partial interface Document {
             <dt>Categories:</dt>
             <dd>Flow</dd>
             <dt>Contexts in which this element can be used:</dt>
-            <dd></dd>
+            <dd>@@@TODO@@@</dd>
             <dt>Content model:</dt>
             <dd>Flow</dd>
             <dt>Tag omission in text/html:</dt>
@@ -459,6 +461,7 @@ partial interface Document {
 interface HTMLNoteElement : HTMLElement {
   attribute DOMString group;
   attribute DOMString type;
+  attribute DOMString title;
   attribute long value;
   readonly attribute DOMString displayValue;
   readonly attribute NodeList references;
@@ -480,7 +483,7 @@ interface HTMLNoteElement : HTMLElement {
         note.
         The attribute, if specified, must have a value that is a
         case-sensitive match
-        for one of the characters given in the first cell of one of the rows of
+        for one of the values given in the first cell of one of the rows of
         the table in <a href="#note-types">Appendix A</a>. The <code>type</code> attribute
         represents the state given in the cell in the
         second column of the row whose first cell matches the attribute’s
@@ -502,7 +505,7 @@ interface HTMLNoteElement : HTMLElement {
         reflect the <a data-for="HTMLNoteElement">value</a> IDL attribute when
         transformed according to the element's <a data-for="HTMLNoteElement">type</a> IDL
         attribute as defined in <a href="#note-types">Appendix A</a>.</p>
-        <p>The <a data-for="HTMLNOteElement">references</a> IDL attribute MUST
+        <p>The <a data-for="HTMLNoteElement">references</a> IDL attribute MUST
         reflect the list of <code>noteref</code> elements that reference the
         note.</p>
         <p>By default, the contents of this element are displayed prefixed by the
@@ -541,12 +544,12 @@ interface HTMLNoteElement : HTMLElement {
                 </ol>
                 </li>
 
-                <li>If the <a data-for='Document'>notes</a>
+                <li>If the <a data-for='Document'>noteGroups</a>
                 entry associated with <em>group</em> does not exist, create one and set 
                 its <a data-for="GroupInfo">group</a> attribute to <em>group</em>.</li>
 
                 <li>Let <em>GroupInfo</em> equal the 
-                <a data-for='Document'>notes</a> entry associated with <em>group</em>.</li>
+                <a data-for='Document'>noteGroups</a> entry associated with <em>group</em>.</li>
 
                 <li>Determine the value for <em>type</em>:
 
@@ -588,7 +591,8 @@ interface HTMLNoteElement : HTMLElement {
                 set, set it to <em>type</em>.</li>
 
                 <li>Set the element's <a data-for="HTMLNoteElement">displayValue</a> attribute to the
-                appropriate display value by correlating <em>type</em> with <em>value</em> as defined
+                appropriate display value by correlating <em>type</em> with <em>title</em> and or 
+                <em>value</em> as defined
                 in the <a href="#note-types">Appendix A</a>.</li>
             </ol>
         </section>
@@ -695,6 +699,9 @@ interface HTMLNoterefElement : HTMLElement {
 </section>
 <section id="note-types" class="appendix">
     <h2>Note types</h2>
+    <p>The <a>display value</a> for a <a>note</a> is determined by using its
+    <a data-for="HTMLNoteElement">type</a> to transform its
+    <a data-for="HTMLNoteElement">value</a> according to the table below.</p>
     <table class="type-table">
         <thead>
             <tr>
@@ -716,20 +723,55 @@ interface HTMLNoterefElement : HTMLElement {
         </th></tr></thead><tbody>
         <tr>
             <td><dfn
-                    data-dfn-for="note/type"
+                    data-dfn-for="HTMLNoteElement/type"
                     data-dfn-type="attr-value"
                     data-export=""
-                    id="attr-valuedef-ol-type-1"><code>1</code><a
+                    id="attr-valuedef-note-type-none"><code>none</code><a
                         class="self-link"
-                        href="semantics.html#attr-valuedef-ol-type-1"></a></dfn>
-                (U+0031)
+                        href="#attr-valuedef-note-type-none"></a></dfn>
+                    (U+006e U+006f U+006e U+0065)
             </td><td><dfn
-                    data-dfn-for="note"
+                    data-dfn-for="HTMLNoteElement"
                     data-dfn-type="state"
                     data-export=""
-                    id="statedef-ol-decimal">decimal<a
+                    id="statedef-note-empty">none or decimal<a
                         class="self-link"
-                        href="semantics.html#statedef-ol-decimal"></a></dfn>
+                        href="#statedef-note-none"></a></dfn>
+            </td><td>Title attribute or Decimal
+                numbers if no title
+            </td><td
+                class="eg"><samp>title</samp><br>-or-<br><samp>1.</samp>
+            </td><td
+                class="eg"><samp>title</samp><br>-or-<br><samp>2.</samp>
+            </td><td
+                class="eg"><samp>title</samp><br>-or-<br><samp>3.</samp>
+            </td><td
+                class="eg">... 
+            </td><td
+                class="eg"><samp>title</samp><br>-or-<br><samp>3999.</samp>
+            </td><td
+                class="eg"><samp>title</samp><br>-or-<br><samp>4000.</samp>
+            </td><td
+                class="eg"><samp>title</samp><br>-or-<br><samp>4001.</samp>
+            </td><td
+                class="eg">...
+        </td></tr>
+        <tr>
+            <td><dfn
+                    data-dfn-for="HTMLNoteElement/type"
+                    data-dfn-type="attr-value"
+                    data-export=""
+                    id="attr-valuedef-note-type-1"><code>1</code><a
+                        class="self-link"
+                        href="#attr-valuedef-note-type-1"></a></dfn>
+                (U+0031)
+            </td><td><dfn
+                    data-dfn-for="HTMLNoteElement"
+                    data-dfn-type="state"
+                    data-export=""
+                    id="statedef-note-decimal">decimal<a
+                        class="self-link"
+                        href="#statedef-note-decimal"></a></dfn>
             </td><td>Decimal
                 numbers
             </td><td
@@ -750,20 +792,20 @@ interface HTMLNoterefElement : HTMLElement {
                 class="eg">...
         </td></tr><tr>
             <td><dfn
-                    data-dfn-for="note/type"
+                    data-dfn-for="HTMLNoteElement/type"
                     data-dfn-type="attr-value"
                     data-export=""
-                    id="attr-valuedef-ol-type-a"><code>a</code><a
+                    id="attr-valuedef-note-type-a"><code>a</code><a
                         class="self-link"
-                        href="semantics.html#attr-valuedef-ol-type-a"></a></dfn>
+                        href="#attr-valuedef-note-type-a"></a></dfn>
                 (U+0061)
             </td><td><dfn
-                    data-dfn-for="note"
+                    data-dfn-for="HTMLNoteElement"
                     data-dfn-type="state"
                     data-export=""
-                    id="statedef-ol-lower-alpha">lower-alpha<a
+                    id="statedef-note-lower-alpha">lower-alpha<a
                         class="self-link"
-                        href="semantics.html#statedef-ol-lower-alpha"></a></dfn>
+                        href="#statedef-note-lower-alpha"></a></dfn>
             </td><td>Lowercase
                 latin
                 alphabet
@@ -787,12 +829,12 @@ interface HTMLNoterefElement : HTMLElement {
             <td><code>A</code>
                 (U+0041)
             </td><td><dfn
-                    data-dfn-for="note"
+                    data-dfn-for="HTMLNoteElement"
                     data-dfn-type="state"
                     data-export=""
-                    id="statedef-ol-upper-alpha">upper-alpha<a
+                    id="statedef-note-upper-alpha">upper-alpha<a
                         class="self-link"
-                        href="semantics.html#statedef-ol-upper-alpha"></a></dfn>
+                        href="#statedef-note-upper-alpha"></a></dfn>
             </td><td>Uppercase
                 latin
                 alphabet
@@ -814,20 +856,20 @@ interface HTMLNoterefElement : HTMLElement {
                 class="eg">...
         </td></tr><tr>
             <td><dfn
-                    data-dfn-for="note/type"
+                    data-dfn-for="HTMLNoteElement/type"
                     data-dfn-type="attr-value"
                     data-export=""
-                    id="attr-valuedef-ol-type-i"><code>i</code><a
+                    id="attr-valuedef-note-type-i"><code>i</code><a
                         class="self-link"
-                        href="semantics.html#attr-valuedef-ol-type-i"></a></dfn>
+                        href="#attr-valuedef-note-type-i"></a></dfn>
                 (U+0069)
             </td><td><dfn
-                    data-dfn-for="note"
+                    data-dfn-for="HTMLNoteElement"
                     data-dfn-type="state"
                     data-export=""
-                    id="statedef-ol-lower-roman">lower-roman<a
+                    id="statedef-note-lower-roman">lower-roman<a
                         class="self-link"
-                        href="semantics.html#statedef-ol-lower-roman"></a></dfn>
+                        href="#statedef-note-lower-roman"></a></dfn>
             </td><td>Lowercase
                 roman
                 numerals
@@ -851,12 +893,12 @@ interface HTMLNoterefElement : HTMLElement {
             <td><code>I</code>
                 (U+0049)
             </td><td><dfn
-                    data-dfn-for="note"
+                    data-dfn-for="HTMLNoteElement"
                     data-dfn-type="state"
                     data-export=""
-                    id="statedef-ol-upper-roman">upper-roman<a
+                    id="statedef-note-upper-roman">upper-roman<a
                         class="self-link"
-                        href="semantics.html#statedef-ol-upper-roman"></a></dfn>
+                        href="#statedef-note-upper-roman"></a></dfn>
             </td><td>Uppercase
                 roman
                 numerals
@@ -877,6 +919,33 @@ interface HTMLNoterefElement : HTMLElement {
             </td><td
                 class="eg">...
     </td></tr></tbody></table>
+    <section id="display-value-processing-model">
+        <h3>Processing model</h3>
+        <p>When determining the <a>display value</a>, user agents MUST process the <code>type</code>
+        and <code>title</code> attributes as follows:</p>
+        <ol>
+            <li>Let <em>DisplayValue</em> equal the <a data-for="HTMLNoteElement">value</a> of the note.</li>
+            <li>If the <a data-for="HTMLNoteElement">type</a> of the note equals <code>none</code>:
+            <ol type='a'>
+                <li>If the <a data-for="HTMLNoteElement">title</a> of the note is non-empty, let
+                <em>DisplayValue</em> equal the value of <a data-for="HTMLNoteElement">title</a>.
+                <p class="HTMLNoteElement">In the case where <em>title</em> is empty, the DisplayValue will
+                already be set to the <em>value</em> of the note in Decimal form.</p>
+                </li>
+            </ol>
+            </li>
+            <li>Otherwise:
+            <ol type='a'>
+                <li>If the value of the <a data-for="HTMLNoteElement">type</a> matches a value from
+                column 1 of the table, transform the <em>DisplayValue</em> into the form as defined in
+                column 2 of the table.
+                </li>
+                <li>If the value of the <em>title</em> of the note is non-empty, append a space
+                (U+0020) and the value of the <em>title</em> to <em>DisplayValue</em>.</li>
+            </ol>
+            </li>
+        </ol>
+    </section>
 </section>
 <section class='informative'>
     <h2>Examples</h2>
@@ -908,6 +977,43 @@ inherit the settings of the group because they are already established.</p>
 
 <p>This is a final paragraph to show how notes can be interleaved in 
 the source and still be simple footnote references.</p>
+</body>
+</html>
+-->
+        </pre>
+        <pre class="example highlight" data-transform="updateExample"><!--
+<!DOCTYPE html>
+<html lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Footnote Example 2</title>
+</head>
+<body>
+<section>
+<h2>Here is a section</h2>
+<p>In this example content there are references to other documents
+<noteref note="bib-dpub-aria"></noteref>.  It is possible to have many of these
+references to support the easy use of whatever style of bibliography the author likes
+<noteref note="bib-html5"></noteref>
+</p>
+</section>
+<section id="normative-references">
+  <h3 id="h-normative-references">A. Normative references</h3>
+  <notegroup group="bibliography" type="none">
+    <note id="bib-dpub-aria" title="DPUB-ARIA-1.0">
+      [DPUB-ARIA-1.0] Matt Garrish; Tzviya Siegman; Markus Gylling; Shane McCarron.  W3C. 
+      <a href="http://www.w3.org/TR/dpub-aria-1.0/"><cite>Digital Publishing WAI-ARIA Module 1.0</cite></a>.
+      17 March 2016. W3C Working Draft. 
+      URL: <a href="http://www.w3.org/TR/dpub-aria-1.0/">http://www.w3.org/TR/dpub-aria-1.0/</a>
+    </note>
+    <note id="bib-html5" title="HTML5">[HTML5]
+      Ian Hickson; Robin Berjon; Steve Faulkner; Travis Leithead; 
+      Erika Doyle Navara; Edward O'Connor; Silvia Pfeiffer. W3C. 
+      <a href="http://www.w3.org/TR/html5/"><cite>HTML5</cite></a>. 
+      28 October 2014. W3C Recommendation. 
+      URL: <a href="http://www.w3.org/TR/html5/">http://www.w3.org/TR/html5/</a>
+    </note>
+  </notegroup>
+</section>
 </body>
 </html>
 -->
