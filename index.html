@@ -4,11 +4,13 @@
 <title>HTML Notes and Note References</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <script src='https://www.w3.org/Tools/respec/respec-w3c-common' async="async" class='remove'></script>
+<script src='updateExample.js' class='remove'></script>
 <script class="remove"><!--
 var respecConfig = {
     // specification status (e.g., WD, LCWD, NOTE, etc.). If in doubt use ED.
     specStatus:           "unofficial",
     processVersion:       "2005",
+    tocIntroductory:      false,
 
     // the specification's short name, as in http://www.w3.org/TR/short-name/
     shortName:            "html-note",
@@ -73,26 +75,8 @@ var respecConfig = {
     maxTocLevel: 2,
 
     // include introduction sections in the ToC
-    tocIntroductory: true,
     doRDFa: 1.1
 };
-      function _esc(s) {
-          s = s.replace(/&/g,'&amp;');
-          s = s.replace(/>/g,'&gt;');
-          s = s.replace(/"/g,'&quot;');
-          s = s.replace(/</g,'&lt;');
-          return s;
-      }
-
-
-      function updateExample(doc, content) {
-        // perform transformations to make it render and prettier
-        content = content.replace(/<!--/, '');
-        content = content.replace(/-->/, '');
-        content = _esc(content);
-        content = content.replace(/\*\*\*\*([^*]*)\*\*\*\*/g, '<span class="hilite">$1</span>') ;
-        return content ;
-      }
 --></script>
 <style>
 table { border-collapse: collapse; border-style: hidden hidden none hidden; }
@@ -398,38 +382,38 @@ partial interface Document {
             <h3>Processing model</h3>
             <p>User agents MUST process the <code>notegroup</code> element as follows:</p>
             <ol>
-                <li>Determine the value for <em>group</em>:
+                <li>Determine the value for <em>Group</em>:
                 <ol type='a'>
-                    <li>If the element's <code>group</code> attribute is present, let <em>group</em> equal
+                    <li>If the element's <code>group</code> attribute is present, let <em>Group</em> equal
                     its value.</li>
                     <li>Otherwise, if the element is a child of a <code>notegroup</code> element, and that
-                    element's <code>group</code> attribute is present, let <em>group</em> equal its
+                    element's <code>group</code> attribute is present, let <em>Group</em> equal its
                     value.</li>
-                    <li>Otherwise, let <em>group</em> equal the empty string.</li>
+                    <li>Otherwise, let <em>Group</em> equal the empty string.</li>
                 </ol>
                 </li>
                 <li>If the <a data-for='Document'>noteGroups</a>
-                entry associated with <em>group</em> does not exist, create one and set 
-                its <a data-for="GroupInfo">group</a> attribute to <em>group</em>.</li>
+                entry associated with <em>Group</em> does not exist, create one and set 
+                its <a data-for="GroupInfo">group</a> attribute to <em>Group</em>.</li>
                 <li>Let <em>GroupInfo</em> equal the 
-                <a data-for='Document'>noteGroups</a> entry associated with <em>group</em>.</li>
-                <li>Determine the value for <em>type</em>:
+                <a data-for='Document'>noteGroups</a> entry associated with <em>Group</em>.</li>
+                <li>Determine the value for <em>Type</em>:
                 <ol type='a'>
-                    <li>If the element's <code>type</code> attribute is present, let <em>type</em> equal
+                    <li>If the element's <code>type</code> attribute is present, let <em>Type</em> equal
                     its value.</li>
                     <li>Otherwise, if <em>GroupInfo</em> has a value for its
                     <a data-for="GroupInfo">type</a> attribute,
-                    let <em>type</em> equal that value.</li>
+                    let <em>Type</em> equal that value.</li>
                     <li>Otherwise, if the element is a child of a <code>notegroup</code> element, and that
-                    element's <code>type</code> attribute is present, let <em>type</em> equal its
+                    element's <code>type</code> attribute is present, let <em>Type</em> equal its
                     value.</li>
-                    <li>Otherwise, let <em>type</em> equal '1'.</li>
+                    <li>Otherwise, let <em>Type</em> equal '1'.</li>
                 </ol>
                 </li>
                 <li>If the <a data-for="GroupInfo">nextValue</a> attribute
                 of <em>GroupInfo</em> is NOT set, set it to 1.</li>
                 <li>If the <a data-for="GroupInfo">type</a> attribute of
-                <em>GroupInfo</em> is NOT set, it to <em>type</em>.</li>
+                <em>GroupInfo</em> is NOT set, set it to <em>Type</em>.</li>
             </ol>
         </section>
     </section>
@@ -529,70 +513,70 @@ interface HTMLNoteElement : HTMLElement {
                 document, or if the element's <code>id</code> attribute is NOT present, abort processing.  This
                 is not a valid <a>note</a> as it cannot be referenced.</li>
 
-                <li>Otherwise, determine the value for <em>group</em>:
+                <li>Otherwise, determine the value for <em>Group</em>:
 
                 <ol type='a'>
 
-                    <li>If the element's <code>group</code> attribute is present, let <em>group</em> equal
+                    <li>If the element's <code>group</code> attribute is present, let <em>Group</em> equal
                     its value.</li>
 
                     <li>Otherwise, if the element is a child of a <code>notegroup</code> element, and that
-                    element's <code>group</code> attribute is present, let <em>group</em> equal its
+                    element's <code>group</code> attribute is present, let <em>Group</em> equal its
                     value.</li>
 
-                    <li>Otherwise, let <em>group</em> equal the empty string.</li>
+                    <li>Otherwise, let <em>Group</em> equal the empty string.</li>
                 </ol>
                 </li>
 
                 <li>If the <a data-for='Document'>noteGroups</a>
-                entry associated with <em>group</em> does not exist, create one and set 
-                its <a data-for="GroupInfo">group</a> attribute to <em>group</em>.</li>
+                entry associated with <em>Group</em> does not exist, create one and set 
+                its <a data-for="GroupInfo">group</a> attribute to <em>Group</em>.</li>
 
                 <li>Let <em>GroupInfo</em> equal the 
-                <a data-for='Document'>noteGroups</a> entry associated with <em>group</em>.</li>
+                <a data-for='Document'>noteGroups</a> entry associated with <em>Group</em>.</li>
 
-                <li>Determine the value for <em>type</em>:
+                <li>Determine the value for <em>Type</em>:
 
                 <ol type='a'>
 
-                    <li>If the element's <code>type</code> attribute is present, let <em>type</em> equal
+                    <li>If the element's <code>type</code> attribute is present, let <em>Type</em> equal
                     its value.</li>
 
                     <li>Otherwise, if <em>GroupInfo</em> has a value for its
                     <a data-for="GroupInfo">type</a> attribute,
-                    let <em>type</em> equal that value.</li>
+                    let <em>Type</em> equal that value.</li>
 
                     <li>Otherwise, if the element is a child of a <code>notegroup</code> element, and that
-                    element's <code>type</code> attribute is present, let <em>type</em> equal its
+                    element's <code>type</code> attribute is present, let <em>Type</em> equal its
                     value.</li>
 
-                    <li>Otherwise, let <em>type</em> equal '1'.</li>
+                    <li>Otherwise, let <em>Type</em> equal '1'.</li>
                 </ol>
                 </li>
 
-                <li>Determine the value for <em>value</em>:
+                <li>Determine the value for <em>Value</em>:
                 <ol type='a'>
 
-                    <li>If the element's <code>value</code> attribute is present, let <em>value</em> equal
+                    <li>If the element's <code>value</code> attribute is present, let <em>Value</em> equal
                     its value.</li>
 
                     <li>Otherwise, if <em>GroupInfo</em> has a value for its 
-                    <a data-for='GroupInfo'>nextValue</a> attribute, let <em>value</em> equal its
+                    <a data-for='GroupInfo'>nextValue</a> attribute, let <em>Value</em> equal its
                     value.</li>
 
-                    <li>Otherwise, let <em>value</em> equal '1'.</li>
+                    <li>Otherwise, let <em>Value</em> equal '1'.</li>
                 </ol>
                 </li>
 
                 <li>Set the <a data-for="GroupInfo">nextValue</a> attribute
-                of <em>GroupInfo</em> to <em>value</em> plus 1.</li>
+                of <em>GroupInfo</em> to <em>Value</em> plus 1.</li>
 
                 <li>If the <a data-for="GroupInfo">type</a> attribute of <em>GroupInfo</em> is NOT
-                set, set it to <em>type</em>.</li>
+                set, set it to <em>Type</em>.</li>
 
-                <li>Set the element's <a data-for="HTMLNoteElement">displayValue</a> attribute to the
-                appropriate display value by correlating <em>type</em> with <em>title</em> and or 
-                <em>value</em> as defined
+                <li>Set the <a data-for="HTMLNoteElement">displayValue</a> attribute to the
+                appropriate display value by correlating <em>Type</em> with
+                <em>title</em> and / or <em>Value</em> as defined
                 in the <a href="#note-types">Appendix A</a>.</li>
             </ol>
         </section>
@@ -685,10 +669,13 @@ interface HTMLNoterefElement : HTMLElement {
                 <li>If that returned null, then abort these steps.</li>
                 <li>Otherwise, perform the following steps:
                 <ol type='a'>
+                    <li>Set the element's IDL attribute <a
+                        data-for="HTMLNoteRefElement">note</a> to the value of the
+                    element's <code>note</code> attribute.</li>
                     <li>Set the element's IDL attribute 
-                    <a data-for="htmlnoterefelement">displayValue</a> 
+                    <a data-for="HTMLNoterefElement">displayValue</a> 
                     to <em>the note</em>'s IDL
-                    attribute <a data-for="htmlnoteelement">displayValue</a></li>
+                    attribute <a data-for="HTMLNoteElement">displayValue</a></li>
                     <li>Add the element's DOM node to <em>the note</em>'s IDL attribute 
                     <code>references</code>.</li>
                 </ol>
